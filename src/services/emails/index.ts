@@ -1,7 +1,12 @@
 import fastify from 'fastify'
 import { emailRoutes } from './routes/emails.routes'
+import 'dotenv/config'
 
+import './config/database'
+import { saveEmail } from './controllers/emails.controller'
 let amqp = require('amqplib/callback_api')
+
+const fastifySv = fastify()
 
 amqp.connect('amqp://localhost', function (error0: any, connection: any) {
   if (error0) {
@@ -38,15 +43,10 @@ amqp.connect('amqp://localhost', function (error0: any, connection: any) {
   })
 })
 
-import './config/database'
-import { saveEmail } from './controllers/emails.controller'
-
-const fastifySv = fastify()
-
 fastifySv.register(emailRoutes)
 fastifySv.listen(
   {
-    port: 3002,
+    port: +process.env.PORT_EMAILS! || 3002,
   },
   (err, address) => {
     if (err) throw err

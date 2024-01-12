@@ -29,6 +29,10 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-manageme
 
 - Crear base de datos de mysql con el nombre: dbprueba
 
+- Duplicar el .env.example y renombrar uno como .env
+
+- Instalar dependencia: ```npm install```
+
 ### Correr los diferentes microservicios:
 - ```yarn dev:clients```
 - ```yarn dev:security```

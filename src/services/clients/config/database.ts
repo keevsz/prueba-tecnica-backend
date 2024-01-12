@@ -1,11 +1,12 @@
 import { Sequelize } from 'sequelize'
+import 'dotenv/config'
 
-const sequelize = new Sequelize('mysql://localhost:3306/dbprueba', {
-  host: 'localhost',
+const sequelize = new Sequelize(process.env.MYSQL_STRING_CONNECTION!, {
+  host: process.env.MYSQL_HOST,
   dialect: 'mysql',
   port: 3306,
-  username: 'root',
-  password: 'password',
+  username: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
 })
 
 sequelize
