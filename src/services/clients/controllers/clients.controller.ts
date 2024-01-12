@@ -25,6 +25,7 @@ export const createClient = async (
   })
   const isValidToken = await responseTokenValid.json()
   if (isValidToken.ok) {
+    let emailSended = ''
     if (!email || !name) {
       return reply
         .status(400)
@@ -35,7 +36,6 @@ export const createClient = async (
     const parameters: ParameterType = await getParameters()
 
     if (parameters.emailSender) {
-      //TODO: "Enviar" correo mediante emails microservicio
       amqp.connect('amqp://localhost', function (error0: any, connection: any) {
         if (error0) {
           throw error0
@@ -55,7 +55,7 @@ export const createClient = async (
             durable: false,
           })
           channel.sendToQueue(queue, Buffer.from(JSON.stringify(emailData)))
-          console.log(' [x] Sent %s', emailData)
+          console.log('Enviando mensaje a microservicio emails', emailData)
         })
 
         setTimeout(function () {
@@ -63,11 +63,17 @@ export const createClient = async (
         }, 500)
       })
       console.log('Email enviado, parametro activado')
+      emailSended = '- Email enviado 🟩, parametro de envio de correo activado'
     } else {
       console.log('Email no enviado, parametro desactivado')
+      emailSended = '- Email no enviado 🟥, parametro de envio de correo desactivado'
     }
 
-    return newClient.dataValues
+    return {
+      message: 'Cliente creado, ' + emailSended,
+      ok: true,
+      data: newClient.dataValues,
+    }
   } else {
     reply.status(401).send({ message: 'Token no válido', ok: false })
   }

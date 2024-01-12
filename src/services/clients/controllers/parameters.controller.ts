@@ -12,7 +12,7 @@ export const initParameters = async () => {
 
   const result = await Parameter.create({
     user: 'kevin',
-    emailSender: true,
+    emailSender: false, //TODO  Parametro de envio de email
   })
 
   redis.set('parameters', JSON.stringify(result.dataValues))
