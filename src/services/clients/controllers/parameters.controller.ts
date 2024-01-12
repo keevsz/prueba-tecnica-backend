@@ -1,6 +1,8 @@
 import { redis } from '../config/redis'
 import Parameter from '../models/parameters'
 
+import 'dotenv/config'
+
 export const initParameters = async () => {
   const initialParamsFound = await Parameter.findOne({
     where: {
@@ -12,7 +14,7 @@ export const initParameters = async () => {
 
   const result = await Parameter.create({
     user: 'kevin',
-    emailSender: false, //TODO  Parametro de envio de email
+    emailSender: process.env.EMAIL_SENDER || false, //TODO  Parametro de envio de email
   })
 
   redis.set('parameters', JSON.stringify(result.dataValues))
