@@ -6,12 +6,14 @@ var amqp = require('amqplib/callback_api')
 
 export const createClient = async (
   request: FastifyRequest,
-  _: FastifyReply
+  reply: FastifyReply
 ) => {
   const { email, name, token } = request.body as CreateClientRequestBody
 
   if (!token) {
-    return { message: 'Debe enviar el token' }
+    return reply
+      .status(401)
+      .send({ message: 'Debe enviar el token', ok: false })
   }
 
   const responseTokenValid = await fetch('http://localhost:3003/verify-token', {
@@ -21,10 +23,12 @@ export const createClient = async (
       'Content-Type': 'application/json',
     },
   })
-  const responseData = await responseTokenValid.json()
-  if (responseData.ok) {
+  const isValidToken = await responseTokenValid.json()
+  if (isValidToken.ok) {
     if (!email || !name) {
-      return { message: 'Debe enviar el email y el nombre' }
+      return reply
+        .status(400)
+        .send({ message: 'Debe enviar el email y el nombre', ok: false })
     }
     const newClient = await Client.create({ name, email })
 
@@ -65,6 +69,6 @@ export const createClient = async (
 
     return newClient.dataValues
   } else {
-    return responseData.message
+    reply.status(401).send({ message: 'Token no válido', ok: false })
   }
 }

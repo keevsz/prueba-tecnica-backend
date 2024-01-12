@@ -3,12 +3,15 @@ import { clientsRoutes } from './routes/clients.routes'
 
 import './config/database'
 import { parametersRoutes } from './routes/parameters.routes'
+import cors from '@fastify/cors';
 
-const server = fastify()
+const fastifySv = fastify()
 
-server.register(clientsRoutes)
-server.register(parametersRoutes)
-server.listen(
+fastifySv.register(cors)
+fastifySv.register(clientsRoutes)
+fastifySv.register(parametersRoutes)
+
+fastifySv.listen(
   {
     port: 3001,
   },

@@ -29,7 +29,7 @@ amqp.connect('amqp://localhost', function (error0: any, connection: any) {
           to: emailData.to,
         })
 
-        console.log('Email guardado:', newEmail)
+        console.log('Email enviado:', newEmail)
       },
       {
         noAck: true,
@@ -50,6 +50,6 @@ fastifySv.listen(
   },
   (err, address) => {
     if (err) throw err
-    console.log(`Microservicio de Correos escuchando en ${address}`)
+    console.log(`Microservicio de correos: ${address}`)
   }
 )
